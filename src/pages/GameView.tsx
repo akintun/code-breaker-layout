@@ -22,10 +22,10 @@ interface GameState {
 }
 
 const DIFFICULTY_SETTINGS = {
-  easy: { maxAttempts: 12, allowDuplicates: true },
-  normal: { maxAttempts: 10, allowDuplicates: true },
-  hard: { maxAttempts: 8, allowDuplicates: false },
-  expert: { maxAttempts: 6, allowDuplicates: false },
+  easy: { maxAttempts: 12, allowDuplicates: true, timeLimit: 600 }, // 10 minutes
+  normal: { maxAttempts: 10, allowDuplicates: true, timeLimit: 480 }, // 8 minutes
+  hard: { maxAttempts: 8, allowDuplicates: false, timeLimit: 360 }, // 6 minutes
+  expert: { maxAttempts: 6, allowDuplicates: false, timeLimit: 240 }, // 4 minutes
 };
 
 export default function GameView() {
@@ -44,23 +44,38 @@ export default function GameView() {
     elapsedTime: 0,
   });
 
-  // Timer effect
+  // Countdown timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
-    if (gameState.startTime && !gameState.isGameOver) {
+    if (gameState.startTime && !gameState.isGameOver && gameState.difficulty) {
       interval = setInterval(() => {
-        setGameState((prev) => ({
-          ...prev,
-          elapsedTime: Math.floor((Date.now() - prev.startTime!) / 1000),
-        }));
+        const settings = DIFFICULTY_SETTINGS[gameState.difficulty!];
+        const elapsed = Math.floor((Date.now() - gameState.startTime!) / 1000);
+        const remaining = settings.timeLimit - elapsed;
+        
+        if (remaining <= 0) {
+          // Time's up - game over
+          setGameState((prev) => ({
+            ...prev,
+            elapsedTime: settings.timeLimit,
+            isGameOver: true,
+            isWon: false,
+          }));
+          setTimeout(() => setShowResultModal(true), 500);
+        } else {
+          setGameState((prev) => ({
+            ...prev,
+            elapsedTime: elapsed,
+          }));
+        }
       }, 1000);
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [gameState.startTime, gameState.isGameOver]);
+  }, [gameState.startTime, gameState.isGameOver, gameState.difficulty]);
 
   const generateSecretCode = (allowDuplicates: boolean): number[] => {
     const code: number[] = [];
@@ -94,6 +109,12 @@ export default function GameView() {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const getRemainingTime = (): number => {
+    if (!gameState.difficulty) return 0;
+    const settings = DIFFICULTY_SETTINGS[gameState.difficulty];
+    return Math.max(0, settings.timeLimit - gameState.elapsedTime);
   };
 
   const calculateFeedback = (guess: number[], secret: number[]) => {
@@ -218,8 +239,8 @@ export default function GameView() {
         </div>
         <div className="flex items-center gap-2 text-sm">
           <Clock className="h-4 w-4 text-secondary" />
-          <span className="font-bold text-secondary font-mono">
-            {formatTime(gameState.elapsedTime)}
+          <span className={`font-bold font-mono ${getRemainingTime() < 60 ? 'text-destructive' : 'text-secondary'}`}>
+            {formatTime(getRemainingTime())}
           </span>
         </div>
         <div className="text-sm">
