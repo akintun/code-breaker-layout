@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Trophy, XCircle } from "lucide-react";
+import { Trophy, XCircle, Clock } from "lucide-react";
 
 interface GameResultModalProps {
   isOpen: boolean;
@@ -14,6 +14,7 @@ interface GameResultModalProps {
   isWon: boolean;
   attempts: number;
   secretCode: number[];
+  elapsedTime: number;
   onPlayAgain: () => void;
 }
 
@@ -23,8 +24,14 @@ export const GameResultModal = ({
   isWon,
   attempts,
   secretCode,
+  elapsedTime,
   onPlayAgain,
 }: GameResultModalProps) => {
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
@@ -51,7 +58,13 @@ export const GameResultModal = ({
           </DialogTitle>
           <DialogDescription className="text-center space-y-4">
             {isWon ? (
-              <p>Congratulations! You solved it in {attempts} tries!</p>
+              <div className="space-y-2">
+                <p>Congratulations! You solved it in {attempts} tries!</p>
+                <div className="flex items-center justify-center gap-2 text-secondary">
+                  <Clock className="h-4 w-4" />
+                  <span className="font-mono font-semibold">{formatTime(elapsedTime)}</span>
+                </div>
+              </div>
             ) : (
               <p>Better luck next time!</p>
             )}

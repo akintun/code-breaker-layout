@@ -1,15 +1,22 @@
-import { Trophy, Medal, Award } from "lucide-react";
+import { Trophy, Medal, Award, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ScoreRowProps {
   rank: number;
   address: string;
   attempts: number;
+  time: number;
 }
 
-export const ScoreRow = ({ rank, address, attempts }: ScoreRowProps) => {
+export const ScoreRow = ({ rank, address, attempts, time }: ScoreRowProps) => {
   const formatAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const getRankIcon = (rank: number) => {
@@ -37,10 +44,19 @@ export const ScoreRow = ({ rank, address, attempts }: ScoreRowProps) => {
       {/* Address */}
       <div className="flex-1 font-mono text-sm">{formatAddress(address)}</div>
 
-      {/* Attempts */}
-      <div className="text-right">
-        <div className="text-sm text-muted-foreground">Attempts</div>
-        <div className="text-lg font-bold text-primary">{attempts}</div>
+      {/* Stats */}
+      <div className="flex gap-6">
+        <div className="text-right">
+          <div className="text-xs text-muted-foreground">Attempts</div>
+          <div className="text-sm font-bold text-primary">{attempts}</div>
+        </div>
+        <div className="text-right">
+          <div className="text-xs text-muted-foreground flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            Time
+          </div>
+          <div className="text-sm font-bold text-secondary font-mono">{formatTime(time)}</div>
+        </div>
       </div>
     </div>
   );

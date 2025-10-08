@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GuessRow } from "@/components/game/GuessRow";
 import { NumberPad } from "@/components/game/NumberPad";
 import { Button } from "@/components/ui/button";
 import { DifficultyModal } from "@/components/modals/DifficultyModal";
 import { GameResultModal } from "@/components/modals/GameResultModal";
-import { Play } from "lucide-react";
+import { Play, Clock } from "lucide-react";
 
 type Difficulty = "easy" | "normal" | "hard" | "expert";
 
@@ -17,6 +17,8 @@ interface GameState {
   difficulty: Difficulty | null;
   isGameOver: boolean;
   isWon: boolean;
+  startTime: number | null;
+  elapsedTime: number;
 }
 
 const DIFFICULTY_SETTINGS = {
@@ -38,7 +40,27 @@ export default function GameView() {
     difficulty: null,
     isGameOver: false,
     isWon: false,
+    startTime: null,
+    elapsedTime: 0,
   });
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (gameState.startTime && !gameState.isGameOver) {
+      interval = setInterval(() => {
+        setGameState((prev) => ({
+          ...prev,
+          elapsedTime: Math.floor((Date.now() - prev.startTime!) / 1000),
+        }));
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [gameState.startTime, gameState.isGameOver]);
 
   const generateSecretCode = (allowDuplicates: boolean): number[] => {
     const code: number[] = [];
@@ -62,8 +84,16 @@ export default function GameView() {
       difficulty,
       isGameOver: false,
       isWon: false,
+      startTime: Date.now(),
+      elapsedTime: 0,
     });
     setShowDifficultyModal(false);
+  };
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const calculateFeedback = (guess: number[], secret: number[]) => {
@@ -186,9 +216,15 @@ export default function GameView() {
             {gameState.guesses.length}/{gameState.maxAttempts}
           </span>
         </div>
+        <div className="flex items-center gap-2 text-sm">
+          <Clock className="h-4 w-4 text-secondary" />
+          <span className="font-bold text-secondary font-mono">
+            {formatTime(gameState.elapsedTime)}
+          </span>
+        </div>
         <div className="text-sm">
           <span className="text-muted-foreground">Mode: </span>
-          <span className="font-bold text-secondary capitalize">
+          <span className="font-bold text-accent capitalize">
             {gameState.difficulty}
           </span>
         </div>
@@ -253,6 +289,7 @@ export default function GameView() {
         isWon={gameState.isWon}
         attempts={gameState.guesses.length}
         secretCode={gameState.secretCode}
+        elapsedTime={gameState.elapsedTime}
         onPlayAgain={handlePlayAgain}
       />
     </div>
