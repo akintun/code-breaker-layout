@@ -11,6 +11,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+     "@farcaster/miniapp-sdk": "^0.1.10",
+    "@farcaster/miniapp-wagmi-connector": "^1.0.0",
+    "@reown/appkit": "^1.8.9",
+    "@reown/appkit-adapter-wagmi": "^1.8.9",
+    "@reown/appkit-common": "^1.8.9",
+    "@reown/appkit-universal-connector": "^1.8.9",
+    "@reown/walletkit": "^1.2.11",
+    "@tanstack/react-query": "^5.90.2",
+    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/core": "^2.21.10",
+    "@walletconnect/types": "^2.21.10",
+    "@walletconnect/utils": "^2.21.10",
+    "ethers": "^6.15.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "viem": "^2.38.0",
+    "wagmi": "^2.17.5"
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
