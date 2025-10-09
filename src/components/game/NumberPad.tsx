@@ -26,7 +26,7 @@ export const NumberPad = ({
             key={num}
             onClick={() => onNumberClick(num)}
             variant="outline"
-            className="h-14 text-lg font-semibold hover:bg-primary/20 hover:border-primary transition-smooth"
+            className="h-14 text-base font-semibold hover:bg-primary/20 hover:border-primary transition-smooth"
           >
             {num}
           </Button>
