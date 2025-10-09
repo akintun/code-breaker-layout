@@ -10,8 +10,6 @@ export const GuessRow = ({ guess, feedback, isActive }: GuessRowProps) => {
   const getFeedbackForPosition = (index: number): "correct" | "partial" | "none" => {
     if (!feedback || !guess) return "none";
     
-    // This is a simplified visualization - just showing if position has feedback
-    // In a real implementation, you'd need to track which specific numbers got which feedback
     const totalFeedback = feedback.correct + feedback.partial;
     if (index < feedback.correct) return "correct";
     if (index < totalFeedback) return "partial";
@@ -33,7 +31,7 @@ export const GuessRow = ({ guess, feedback, isActive }: GuessRowProps) => {
           <div key={i} className="flex flex-col items-center gap-1">
             <div
               className={cn(
-                "w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-base sm:text-lg font-bold border-2 transition-smooth",
+                "w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-sm sm:text-base font-bold border-2 transition-smooth",
                 guess?.[i] !== undefined
                   ? "bg-muted border-primary text-foreground"
                   : "bg-background border-border text-muted-foreground"
