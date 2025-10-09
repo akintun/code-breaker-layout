@@ -228,9 +228,9 @@ export default function GameView() {
   }
 
   return (
-    <div className="container max-w-md mx-auto px-4 py-6 space-y-6">
+    <div className="container max-w-md mx-auto px-4 py-4 sm:py-6 space-y-4">
       {/* Game Status Bar */}
-      <div className="flex items-center justify-between p-4 rounded-lg bg-card border border-border">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 p-3 sm:p-4 rounded-lg bg-card border border-border">
         <div className="text-sm">
           <span className="text-muted-foreground">Tries: </span>
           <span className="font-bold text-primary">
@@ -254,7 +254,7 @@ export default function GameView() {
       {/* Guess History */}
       <div className="space-y-2">
         <h2 className="text-sm font-semibold text-muted-foreground">History</h2>
-        <div className="space-y-2 max-h-64 overflow-y-auto">
+        <div className="space-y-2 max-h-48 sm:max-h-64 overflow-y-auto pr-2">
           {gameState.guesses.map((item, index) => (
             <GuessRow
               key={index}
