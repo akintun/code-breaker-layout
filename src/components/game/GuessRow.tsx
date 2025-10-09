@@ -21,19 +21,19 @@ export const GuessRow = ({ guess, feedback, isActive }: GuessRowProps) => {
   return (
     <div
       className={cn(
-        "flex items-center gap-3 p-3 rounded-lg border transition-smooth",
+        "flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border transition-smooth",
         isActive
           ? "border-primary bg-primary/10 glow-primary"
           : "border-border bg-card"
       )}
     >
       {/* Guess Numbers with Feedback Colors Below */}
-      <div className="flex gap-2 flex-1">
+      <div className="flex gap-1.5 sm:gap-2 flex-1">
         {[0, 1, 2, 3].map((i) => (
           <div key={i} className="flex flex-col items-center gap-1">
             <div
               className={cn(
-                "w-12 h-12 rounded-lg flex items-center justify-center text-lg font-bold border-2 transition-smooth",
+                "w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-base sm:text-lg font-bold border-2 transition-smooth",
                 guess?.[i] !== undefined
                   ? "bg-muted border-primary text-foreground"
                   : "bg-background border-border text-muted-foreground"
@@ -58,7 +58,7 @@ export const GuessRow = ({ guess, feedback, isActive }: GuessRowProps) => {
 
       {/* Feedback Pegs (kept for reference) */}
       {feedback && (
-        <div className="flex gap-1">
+        <div className="flex flex-col gap-1">
           {/* Green pegs (correct position) */}
           {Array.from({ length: feedback.correct }).map((_, i) => (
             <div
