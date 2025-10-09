@@ -47,7 +47,7 @@ export const GameResultModal = ({
               </div>
             )}
           </div>
-          <DialogTitle className="text-2xl text-center">
+          <DialogTitle className="text-xl text-center">
             {isWon ? (
               <span className="bg-gradient-to-r from-success to-primary bg-clip-text text-transparent">
                 Code Cracked!
@@ -75,7 +75,7 @@ export const GameResultModal = ({
                 {secretCode.map((num, i) => (
                   <div
                     key={i}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-primary/20 border-2 border-primary flex items-center justify-center text-xl sm:text-2xl font-bold text-primary glow-primary"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-primary/20 border-2 border-primary flex items-center justify-center text-lg sm:text-xl font-bold text-primary glow-primary"
                   >
                     {num}
                   </div>
