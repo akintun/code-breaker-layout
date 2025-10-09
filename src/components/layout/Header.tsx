@@ -26,10 +26,10 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 transition-smooth hover:opacity-80">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center font-bold text-xl glow-primary">
+            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center font-bold text-lg glow-primary">
               CB
             </div>
-            <span className="hidden sm:inline text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="hidden sm:inline text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               ChainBreaker
             </span>
           </div>
