@@ -75,7 +75,7 @@ export const GameResultModal = ({
                 {secretCode.map((num, i) => (
                   <div
                     key={i}
-                    className="w-14 h-14 rounded-lg bg-primary/20 border-2 border-primary flex items-center justify-center text-2xl font-bold text-primary glow-primary"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-primary/20 border-2 border-primary flex items-center justify-center text-xl sm:text-2xl font-bold text-primary glow-primary"
                   >
                     {num}
                   </div>
@@ -85,7 +85,7 @@ export const GameResultModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex gap-3 mt-4">
+        <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <Button
             variant="outline"
             onClick={onClose}
