@@ -29,7 +29,7 @@ export const Header = () => {
             <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center font-bold text-xl glow-primary">
               CB
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="hidden sm:inline text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               ChainBreaker
             </span>
           </div>
@@ -49,10 +49,15 @@ export const Header = () => {
           <Button
             onClick={handleWalletConnect}
             variant={walletAddress ? "secondary" : "default"}
-            className={walletAddress ? "" : "gradient-primary glow-primary"}
+            className={`${walletAddress ? "" : "gradient-primary glow-primary"} px-3 sm:px-4`}
           >
-            <Wallet className="mr-2 h-4 w-4" />
-            {walletAddress ? formatAddress(walletAddress) : "Connect Wallet"}
+            <Wallet className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">
+              {walletAddress ? formatAddress(walletAddress) : "Connect Wallet"}
+            </span>
+            <span className="sm:hidden">
+              {walletAddress ? formatAddress(walletAddress) : "Connect"}
+            </span>
           </Button>
         </div>
       </div>
