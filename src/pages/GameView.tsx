@@ -229,38 +229,36 @@ export default function GameView() {
 
   if (!gameState.difficulty) {
     return (
-      <div className="container max-w-6xl mx-auto px-4 py-8">
+      <div className="container max-w-4xl mx-auto px-4 py-8">
         {/* Treasury Pool */}
         <div className="mb-6">
           <TreasuryPool amount={treasuryAmount} />
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Welcome Section */}
-          <div className="text-center space-y-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                ChainBreaker
-              </h1>
-              <p className="text-muted-foreground">
-                Crack the code. Prove your skills on-chain.
-              </p>
-            </div>
-
-            <Button
-              onClick={() => setShowDifficultyModal(true)}
-              size="lg"
-              className="gradient-primary glow-primary w-full h-14 text-base"
-            >
-              <Play className="mr-2 h-5 w-5" />
-              Start New Game
-            </Button>
+        {/* Welcome Section */}
+        <div className="max-w-md mx-auto text-center space-y-6 mb-8">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              ChainBreaker
+            </h1>
+            <p className="text-muted-foreground">
+              Crack the code. Prove your skills on-chain.
+            </p>
           </div>
 
-          {/* Recent Activities */}
-          <div>
-            <RecentActivities activities={recentActivities} />
-          </div>
+          <Button
+            onClick={() => setShowDifficultyModal(true)}
+            size="lg"
+            className="gradient-primary glow-primary w-full h-14 text-base"
+          >
+            <Play className="mr-2 h-5 w-5" />
+            Start New Game
+          </Button>
+        </div>
+
+        {/* Recent Activities */}
+        <div className="max-w-2xl mx-auto">
+          <RecentActivities activities={recentActivities} />
         </div>
 
         <DifficultyModal
