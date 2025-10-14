@@ -9,6 +9,7 @@ interface UseGameTimerProps {
 
 export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGameTimerProps) => {
   const intervalRef = useRef<number | null>(null);
+  const timeUpCalledRef = useRef<boolean>(false);
 
   const formatTime = useCallback((seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -23,7 +24,7 @@ export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGame
   }, [gameState.difficulty, gameState.elapsedTime]);
 
   const clearTimer = useCallback(() => {
-    if (intervalRef.current) {
+    if (intervalRef.current !== null) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
@@ -32,6 +33,8 @@ export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGame
   const startTimer = useCallback(() => {
     if (!gameState.startTime || !gameState.difficulty) return;
 
+    // Reset time up flag when starting a new timer
+    timeUpCalledRef.current = false;
     clearTimer();
     
     intervalRef.current = setInterval(() => {
@@ -42,7 +45,12 @@ export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGame
       if (remaining <= 0) {
         updateElapsedTime(settings.timeLimit);
         clearTimer();
-        onTimeUp();
+        
+        // Prevent multiple calls to onTimeUp
+        if (!timeUpCalledRef.current) {
+          timeUpCalledRef.current = true;
+          onTimeUp();
+        }
       } else {
         updateElapsedTime(elapsed);
       }
@@ -57,13 +65,25 @@ export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGame
       clearTimer();
     }
 
-    return clearTimer;
+    // Cleanup function
+    return () => {
+      clearTimer();
+    };
   }, [gameState.startTime, gameState.isGameOver, gameState.difficulty, startTimer, clearTimer]);
 
-  // Cleanup on unmount
+  // Cleanup on unmount - this is critical for preventing memory leaks
   useEffect(() => {
-    return clearTimer;
+    return () => {
+      clearTimer();
+    };
   }, [clearTimer]);
+
+  // Additional cleanup when game ends
+  useEffect(() => {
+    if (gameState.isGameOver) {
+      clearTimer();
+    }
+  }, [gameState.isGameOver, clearTimer]);
 
   return {
     formatTime,

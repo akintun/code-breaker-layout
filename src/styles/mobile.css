@@ -1,0 +1,264 @@
+/* Mobile-first responsive utilities and touch optimizations */
+
+/* Touch target improvements */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  @apply touch-manipulation;
+}
+
+/* Enhanced touch feedback */
+.touch-target:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Better spacing for mobile */
+@media (max-width: 640px) {
+  .mobile-spacing {
+    @apply px-4 py-3;
+  }
+  
+  .mobile-compact {
+    @apply px-2 py-1;
+  }
+}
+
+/* Responsive typography */
+.responsive-text {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  line-height: 1.4;
+}
+
+.responsive-heading {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  line-height: 1.2;
+}
+
+/* Mobile navigation improvements */
+@media (max-width: 768px) {
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 z-50;
+    @apply bg-background/95 backdrop-blur-sm;
+    @apply border-t border-border;
+    @apply safe-area-inset-bottom;
+  }
+}
+
+/* Safe area for devices with notches */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
+
+/* Responsive grid layouts */
+.responsive-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100px, 100%), 1fr));
+}
+
+@media (min-width: 640px) {
+  .responsive-grid {
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  }
+}
+
+/* Mobile-optimized number pad */
+@media (max-width: 640px) {
+  .number-pad-mobile {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.375rem;
+  }
+  
+  .number-pad-mobile button {
+    height: 3rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+/* Better scrolling on mobile */
+.mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Prevent zoom on input focus (iOS) */
+.no-zoom {
+  font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* Mobile-friendly modals */
+@media (max-width: 640px) {
+  .mobile-modal {
+    @apply m-0 h-full w-full max-w-none rounded-none;
+    @apply flex flex-col;
+  }
+  
+  .mobile-modal-content {
+    @apply flex-1 overflow-auto p-4;
+  }
+  
+  .mobile-modal-footer {
+    @apply p-4 border-t border-border bg-background;
+    @apply safe-area-inset-bottom;
+  }
+}
+
+/* Improved button spacing for touch */
+.button-group-mobile {
+  @apply flex gap-3;
+}
+
+@media (max-width: 640px) {
+  .button-group-mobile {
+    @apply flex-col gap-2;
+  }
+  
+  .button-group-mobile button {
+    @apply h-12 text-base;
+  }
+}
+
+/* Better loading states for mobile */
+.loading-spinner-mobile {
+  @apply w-6 h-6;
+}
+
+@media (max-width: 640px) {
+  .loading-spinner-mobile {
+    @apply w-8 h-8;
+  }
+}
+
+/* Responsive containers */
+.container-mobile {
+  @apply container mx-auto px-4;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container-mobile {
+    @apply px-6;
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-mobile {
+    @apply px-8;
+    max-width: 1024px;
+  }
+}
+
+/* Gesture improvements */
+.gesture-pan-y {
+  touch-action: pan-y;
+}
+
+.gesture-pan-x {
+  touch-action: pan-x;
+}
+
+.gesture-none {
+  touch-action: none;
+}
+
+/* High DPI optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .crisp-edges {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Dark mode mobile improvements */
+@media (prefers-color-scheme: dark) {
+  .mobile-dark-bg {
+    @apply bg-gray-950;
+  }
+  
+  .mobile-dark-text {
+    @apply text-gray-100;
+  }
+}
+
+/* Focus improvements for mobile keyboard navigation */
+.mobile-focus:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+}
+
+/* Smooth transitions optimized for mobile */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Mobile-specific animations */
+@keyframes slide-up-mobile {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up-mobile {
+  animation: slide-up-mobile 0.3s ease-out;
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .transition-smooth,
+  .transition-bounce {
+    transition: none;
+  }
+  
+  .animate-slide-up-mobile {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+}

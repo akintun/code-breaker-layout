@@ -1,5 +1,6 @@
 import { GuessRow } from "./GuessRow";
 import { GameGuess } from "@/types/game";
+import { memo, useMemo } from "react";
 
 interface GuessHistoryProps {
   guesses: GameGuess[];
@@ -7,20 +8,24 @@ interface GuessHistoryProps {
   isGameOver: boolean;
 }
 
-export const GuessHistory = ({ guesses, currentGuess, isGameOver }: GuessHistoryProps) => {
+export const GuessHistory = memo<GuessHistoryProps>(({ guesses, currentGuess, isGameOver }) => {
+  const memoizedGuesses = useMemo(() => {
+    return guesses.map((item, index) => (
+      <GuessRow
+        key={`guess-${index}`}
+        guess={item.guess}
+        feedback={item.feedback}
+      />
+    ));
+  }, [guesses]);
+
   return (
     <div className="space-y-4">
       {/* Guess History */}
       <div className="space-y-2">
         <h2 className="text-sm font-semibold text-muted-foreground">History</h2>
         <div className="space-y-2 max-h-48 sm:max-h-64 overflow-y-auto pr-2">
-          {guesses.map((item, index) => (
-            <GuessRow
-              key={index}
-              guess={item.guess}
-              feedback={item.feedback}
-            />
-          ))}
+          {memoizedGuesses}
         </div>
       </div>
 
@@ -35,4 +40,4 @@ export const GuessHistory = ({ guesses, currentGuess, isGameOver }: GuessHistory
       )}
     </div>
   );
-};
+});

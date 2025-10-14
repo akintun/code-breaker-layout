@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useGameState } from "./useGameState";
 import { useGameTimer } from "./useGameTimer";
+import { useGamePersistence } from "./useGamePersistence";
 import { Difficulty } from "@/types/game";
 
 export const useGameLogic = () => {
@@ -12,7 +13,14 @@ export const useGameLogic = () => {
     addNumberToGuess,
     removeLastNumber,
     submitGuess,
+    canSubmitGuess,
+    isGameActive,
   } = useGameState();
+
+  const {
+    loadGameState,
+    clearSavedState,
+  } = useGamePersistence(gameState, (state) => updateGameState(state));
 
   const handleTimeUp = useCallback(() => {
     updateGameState({
@@ -44,16 +52,23 @@ export const useGameLogic = () => {
   }, [submitGuess]);
 
   const handlePlayAgain = useCallback((difficulty: Difficulty) => {
+    clearSavedState(); // Clear any saved state when starting new game
     startNewGame(difficulty);
-  }, [startNewGame]);
+  }, [startNewGame, clearSavedState]);
 
   const handleResetGame = useCallback(() => {
+    clearSavedState(); // Clear saved state when resetting
     resetGameState();
     timer.clearTimer();
-  }, [resetGameState, timer]);
+  }, [resetGameState, timer, clearSavedState]);
 
-  const canSubmitGuess = gameState.currentGuess.length === 4;
-  const isGameActive = !gameState.isGameOver && gameState.difficulty !== null;
+  // Try to load saved game state on mount
+  useEffect(() => {
+    const wasLoaded = loadGameState();
+    if (wasLoaded) {
+      console.log("Restored saved game state");
+    }
+  }, [loadGameState]);
 
   return {
     // Game state
@@ -74,5 +89,8 @@ export const useGameLogic = () => {
     // Computed values
     canSubmitGuess,
     isGameActive,
+
+    // Persistence utilities
+    clearSavedState,
   };
 };

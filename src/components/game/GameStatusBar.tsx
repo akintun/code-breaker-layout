@@ -1,4 +1,5 @@
 import { Clock } from "lucide-react";
+import { memo } from "react";
 
 interface GameStatusBarProps {
   attempts: number;
@@ -8,13 +9,13 @@ interface GameStatusBarProps {
   formatTime: (seconds: number) => string;
 }
 
-export const GameStatusBar = ({ 
+export const GameStatusBar = memo<GameStatusBarProps>(({ 
   attempts, 
   maxAttempts, 
   remainingTime, 
   difficulty, 
   formatTime 
-}: GameStatusBarProps) => {
+}) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 p-3 sm:p-4 rounded-lg bg-card border border-border">
       <div className="text-sm">
@@ -37,4 +38,4 @@ export const GameStatusBar = ({
       </div>
     </div>
   );
-};
+});

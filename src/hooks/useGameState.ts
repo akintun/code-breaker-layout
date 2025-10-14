@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { GameState, Difficulty, DIFFICULTY_SETTINGS, GameFeedback } from "@/types/game";
 
 const initialGameState: GameState = {
@@ -16,6 +16,15 @@ const initialGameState: GameState = {
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
+
+  // Memoize expensive calculations
+  const canSubmitGuess = useMemo(() => {
+    return gameState.currentGuess.length === 4 && !gameState.isGameOver;
+  }, [gameState.currentGuess.length, gameState.isGameOver]);
+
+  const isGameActive = useMemo(() => {
+    return !gameState.isGameOver && gameState.difficulty !== null;
+  }, [gameState.isGameOver, gameState.difficulty]);
 
   const updateGameState = useCallback((updates: Partial<GameState>) => {
     setGameState(prev => ({ ...prev, ...updates }));
@@ -36,7 +45,7 @@ export const useGameState = () => {
     return code;
   }, []);
 
-  const calculateFeedback = useCallback((guess: number[], secret: number[]): GameFeedback => {
+  const calculateFeedback = useCallback((guess: readonly number[], secret: readonly number[]): GameFeedback => {
     let correct = 0;
     let partial = 0;
     const secretCopy = [...secret];
@@ -83,43 +92,50 @@ export const useGameState = () => {
   }, [generateSecretCode]);
 
   const addNumberToGuess = useCallback((num: number) => {
-    if (gameState.currentGuess.length < 4 && !gameState.isGameOver) {
-      updateGameState({
-        currentGuess: [...gameState.currentGuess, num],
-      });
-    }
-  }, [gameState.currentGuess, gameState.isGameOver, updateGameState]);
+    setGameState(prev => {
+      if (prev.currentGuess.length < 4 && !prev.isGameOver) {
+        return {
+          ...prev,
+          currentGuess: [...prev.currentGuess, num],
+        };
+      }
+      return prev;
+    });
+  }, []);
 
   const removeLastNumber = useCallback(() => {
-    if (gameState.currentGuess.length > 0) {
-      updateGameState({
-        currentGuess: gameState.currentGuess.slice(0, -1),
-      });
-    }
-  }, [gameState.currentGuess, updateGameState]);
+    setGameState(prev => {
+      if (prev.currentGuess.length > 0) {
+        return {
+          ...prev,
+          currentGuess: prev.currentGuess.slice(0, -1),
+        };
+      }
+      return prev;
+    });
+  }, []);
 
   const submitGuess = useCallback(() => {
     if (gameState.currentGuess.length !== 4) return false;
 
     const feedback = calculateFeedback(gameState.currentGuess, gameState.secretCode);
-    const newGuesses = [
-      ...gameState.guesses,
-      { guess: gameState.currentGuess, feedback },
-    ];
+    const newGuess = { guess: gameState.currentGuess, feedback };
+    const newGuesses = [...gameState.guesses, newGuess];
     const isWon = feedback.correct === 4;
     const newAttemptsLeft = gameState.attemptsLeft - 1;
     const isGameOver = isWon || newAttemptsLeft === 0;
 
-    updateGameState({
+    setGameState(prev => ({
+      ...prev,
       guesses: newGuesses,
       currentGuess: [],
       attemptsLeft: newAttemptsLeft,
       isGameOver,
       isWon,
-    });
+    }));
 
     return isGameOver;
-  }, [gameState, calculateFeedback, updateGameState]);
+  }, [gameState.currentGuess, gameState.secretCode, gameState.guesses, gameState.attemptsLeft, calculateFeedback]);
 
   return {
     gameState,
@@ -130,5 +146,8 @@ export const useGameState = () => {
     removeLastNumber,
     submitGuess,
     calculateFeedback,
+    // Memoized computed values
+    canSubmitGuess,
+    isGameActive,
   };
 };
