@@ -8,7 +8,7 @@ interface UseGameTimerProps {
 }
 
 export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGameTimerProps) => {
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   const formatTime = useCallback((seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -46,7 +46,7 @@ export const useGameTimer = ({ gameState, onTimeUp, updateElapsedTime }: UseGame
       } else {
         updateElapsedTime(elapsed);
       }
-    }, 1000);
+    }, 1000) as unknown as number;
   }, [gameState.startTime, gameState.difficulty, clearTimer, updateElapsedTime, onTimeUp]);
 
   // Start/stop timer based on game state
